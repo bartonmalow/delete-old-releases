@@ -10,7 +10,7 @@ inputs:
   keep-count:
     description: 'Number of releases to keep'
     required: false
-    default: 3
+    default: '3'
   keep-old-minor-releases:
     description: 'Keep the latest release of each older minor versions.'
     required: true
@@ -21,23 +21,24 @@ inputs:
   keep-old-minor-releases-count:
     description: 'Number of old releases in one minor version to keep.'
     required: false
-    default: 1
+    default: '1'
   include-prerelease:
     description: 'Always include prerelease versions'
     required: false
-    default: false
+    default: 'false'
   semver-loose:
     description: 'Interpret versions and ranges loosely'
     required: false
-    default: false
+    default: 'false'
   remove-tags:
     description: 'Also remove the tags associated with the removed releases.'
     required: false
-    default: false
+    default: 'false'
   dry-run:
     description: "Doesn't delete anything. Only a test run."
     required: false
-    default: false
+    default: 'false'
+
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'

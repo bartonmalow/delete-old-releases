@@ -53,59 +53,66 @@ async function getReleaseListFromGithub(owner, repo, page, outputObj) {
 
 function parseReleaseTreeFromList(releases, outputObj) {
   for (const tag_name in releases) {
-    const version = semver.parse(
-      semver.valid(tag_name) || formatSemver(tag_name),
+    if (tag_name.startsWith("version-bot/")) {
+      // remove version-bot from the tag name
+      const new_tag_name = tag_name.replace("version-bot/", "");
+
+      const version = semver.parse(
+      semver.valid(new_tag_name) || formatSemver(new_tag_name),
       SemverOption
-    );
+      );
+      // check if parse success
+      if (!version) {
+        // skip if version is unparseable
+        console.log(`Skipped unparseable version: ${new_tag_name}`);
+        continue;
+      }
 
-    // check if parse success
-    if (!version) {
-      // skip if version is unparseable
-      console.log(`Skipped unparseable version: ${tag_name}`);
-      continue;
+      const major_str = version.major.toString();
+      const minor_str = version.minor.toString();
+      const patch_str = version.patch.toString();
+
+      switch (Options.keepOldBy) {
+        case 1:
+          if (!outputObj.hasOwnProperty(major_str)) outputObj[major_str] = [];
+
+          outputObj[major_str].push({
+            id: releases[new_tag_name],
+            version: new_tag_name,
+          });
+          break;
+        case 2:
+          if (!outputObj.hasOwnProperty(major_str)) {
+            outputObj[major_str] = {};
+          }
+          if (!outputObj[major_str].hasOwnProperty(minor_str)) {
+            outputObj[major_str][minor_str] = [];
+          }
+
+          outputObj[major_str][minor_str].push({
+            id: releases[new_tag_name],
+            version: new_tag_name,
+          });
+          break;
+        case 3:
+          if (!outputObj.hasOwnProperty(major_str)) {
+            outputObj[major_str] = {};
+          }
+          if (!outputObj[major_str].hasOwnProperty(minor_str)) {
+            outputObj[major_str][minor_str] = {};
+          }
+          if (!outputObj[major_str][minor_str].hasOwnProperty(patch_str))
+            outputObj[major_str][minor_str][patch_str] = [];
+
+          outputObj[major_str][minor_str][patch_str].push({
+            id: releases[new_tag_name],
+            version: new_tag_name,
+          });
+          break;
+      }
     }
-
-    const major_str = version.major.toString();
-    const minor_str = version.minor.toString();
-    const patch_str = version.patch.toString();
-
-    switch (Options.keepOldBy) {
-      case 1:
-        if (!outputObj.hasOwnProperty(major_str)) outputObj[major_str] = [];
-
-        outputObj[major_str].push({
-          id: releases[tag_name],
-          version: tag_name,
-        });
-        break;
-      case 2:
-        if (!outputObj.hasOwnProperty(major_str)) {
-          outputObj[major_str] = {};
-        }
-        if (!outputObj[major_str].hasOwnProperty(minor_str)) {
-          outputObj[major_str][minor_str] = [];
-        }
-
-        outputObj[major_str][minor_str].push({
-          id: releases[tag_name],
-          version: tag_name,
-        });
-        break;
-      case 3:
-        if (!outputObj.hasOwnProperty(major_str)) {
-          outputObj[major_str] = {};
-        }
-        if (!outputObj[major_str].hasOwnProperty(minor_str)) {
-          outputObj[major_str][minor_str] = {};
-        }
-        if (!outputObj[major_str][minor_str].hasOwnProperty(patch_str))
-          outputObj[major_str][minor_str][patch_str] = [];
-
-        outputObj[major_str][minor_str][patch_str].push({
-          id: releases[tag_name],
-          version: tag_name,
-        });
-        break;
+    else {
+      console.log(`Skipped release: ${tag_name}`);
     }
   }
 }
