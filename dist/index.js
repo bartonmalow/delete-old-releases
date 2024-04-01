@@ -36815,6 +36815,7 @@ const Options = {
   keepOldCount: 1,
   removeTags: false,
   dryRun: false,
+  versionPrefix: "",
 };
 
 const SemverOption = {
@@ -36858,9 +36859,9 @@ async function getReleaseListFromGithub(owner, repo, page, outputObj) {
 
 function parseReleaseTreeFromList(releases, outputObj) {
   for (const tag_name in releases) {
-    if (tag_name.startsWith("version-bot/")) {
+    if (tag_name.startsWith(Options.versionPrefix) || Options.versionPrefix === "") {
       // remove version-bot from the tag name
-      const new_tag_name = tag_name.replace("version-bot/", "");
+      const new_tag_name = tag_name.replace(Options.versionPrefix, "");
 
       const version = semver.parse(
       semver.valid(new_tag_name) || formatSemver(new_tag_name),
@@ -37096,6 +37097,8 @@ try {
   Options.keepOldCount = Number(core.getInput("keep-old-minor-releases-count"));
   Options.removeTags = core.getBooleanInput("remove-tags");
   Options.dryRun = core.getBooleanInput("dry-run");
+  // version prefix
+  Options.versionPrefix = core.getInput("version-prefix");
   SemverOption.loose = core.getBooleanInput("semver-loose");
   SemverOption.includePrerelease = core.getBooleanInput("include-prerelease");
   if (isNaN(Options.keepCount))

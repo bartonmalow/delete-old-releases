@@ -38,7 +38,10 @@ inputs:
     description: "Doesn't delete anything. Only a test run."
     required: false
     default: 'false'
-
+  version-prefix:
+    description: 'Only delete releases with this prefix.'
+    required: false
+    default: ''
 runs:
   using: 'node20'
   main: 'dist/index.js'

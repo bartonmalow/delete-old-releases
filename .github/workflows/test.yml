@@ -26,8 +26,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           keep-count: 5
           keep-old-minor-releases: true
-          keep-old-minor-releases-by: patch
           include-prerelease: true
           semver-loose: true
           remove-tags: true
           dry-run: true
+          version-prefix: version-bot
