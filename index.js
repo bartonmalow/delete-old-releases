@@ -44,7 +44,10 @@ async function getReleaseListFromGithub(owner, repo, page, outputObj) {
     core.setFailed(error.message);
   }
   for (const release of data) {
-    outputObj[release.tag_name] = release.id;
+    // Filter releases by version prefix
+    if (release.tag_name.startsWith(Options.versionPrefix) || Options.versionPrefix === "") {
+      outputObj[release.tag_name] = release.id;
+    }
   }
   console.log(`Page: ${page}, length: ${data.length}`);
   if (data.length === 100) {
