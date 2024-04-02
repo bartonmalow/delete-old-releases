@@ -140,17 +140,22 @@ function getLatestReleasesToKeep(release_tree) {
   ver_numbers.sort((a, b) => {
     return Number(b) - Number(a);
   });
-  const latest_ver = release_tree[ver_numbers[0]];
-  if (Array.isArray(latest_ver)) {
-    sortSemverInTreeList(latest_ver);
-    const releases_to_keep = latest_ver.slice(0, Options.keepCount);
-    releases_to_keep.forEach((ele, idx, arr) => {
-      arr[idx] = ele.version;
-    });
-    delete release_tree[ver_numbers[0]];
-    return releases_to_keep;
-  } else {
-    return getLatestReleasesToKeep(latest_ver);
+  if (ver_numbers.length != 0){
+    const latest_ver = release_tree[ver_numbers[0]];
+    if (Array.isArray(latest_ver)) {
+      sortSemverInTreeList(latest_ver);
+      const releases_to_keep = latest_ver.slice(0, Options.keepCount);
+      releases_to_keep.forEach((ele, idx, arr) => {
+        arr[idx] = ele.version;
+      });
+      delete release_tree[ver_numbers[0]];
+      return releases_to_keep;
+    } else {
+      return getLatestReleasesToKeep(latest_ver);
+    }
+  }
+  else {
+    return [];
   }
 }
 
