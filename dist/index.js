@@ -36995,7 +36995,11 @@ function delReleasesFromList(releaseTree, outReleaseList) {
     getOldReleasesToKeep(releaseTree, releasesToKeep);
   }
 
+  // Remove releases to keep from the release list
   releasesToKeep.forEach((ver) => {
+    if (Options.versionPrefix !== ""){
+      ver = Options.versionPrefix + ver;
+    }
     delete outReleaseList[ver];
   });
 
