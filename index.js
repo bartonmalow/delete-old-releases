@@ -58,7 +58,7 @@ async function getReleaseListFromGithub(owner, repo, page, outputObj) {
 function parseReleaseTreeFromList(releases, outputObj) {
   for (const tag_name in releases) {
     if (tag_name.startsWith(Options.versionPrefix) || Options.versionPrefix === "") {
-      // remove version-bot from the tag name
+      // remove prefix from the tag name
       const new_tag_name = tag_name.replace(Options.versionPrefix, "");
 
       const version = semver.parse(
@@ -70,6 +70,9 @@ function parseReleaseTreeFromList(releases, outputObj) {
         // skip if version is unparseable
         console.log(`Skipped unparseable version: ${new_tag_name}`);
         continue;
+      }
+      else { 
+        console.log(`Parsed version: ${new_tag_name}`);
       }
 
       const major_str = version.major.toString();
