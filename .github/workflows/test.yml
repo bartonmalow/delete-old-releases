@@ -30,4 +30,4 @@ jobs:
           semver-loose: true
           remove-tags: true
           dry-run: true
-          version-prefix: version-bot
+          version-prefix: ''
