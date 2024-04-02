@@ -41,7 +41,7 @@ async function getReleaseListFromGithub(owner, repo, page, outputObj) {
       page: page,
     });
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(`${error.name}: ${error.message}`);
   }
   for (const release of data) {
     // Filter releases by version prefix
@@ -318,5 +318,5 @@ try {
 
   run();
 } catch (error) {
-  core.setFailed(error.message);
+  core.setFailed(`${error.name}: ${error.message}`);
 }
