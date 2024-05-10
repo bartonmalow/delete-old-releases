@@ -6,9 +6,8 @@ on:
       - master
 
 jobs:
-  test:
+  build_and_run:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,8 +31,8 @@ jobs:
           dry-run: true
           version-prefix: ''
 
-      - name: Version the release
-        if: success()
-        uses: bartonmalow/delete-old-release/.github/workflows/version.yml@main
-        with:
-            GH_PAT: ${{ secrets.GH_PAT }}
+  call_reusable_workflow:
+    needs: build_and_run
+    uses: bartonmalow/delete-old-release/.github/workflows/version.yml@main
+    with:
+          GH_PAT: ${{ secrets.GH_PAT }}

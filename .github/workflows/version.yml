@@ -43,7 +43,7 @@ jobs:
             config: delete-old-release.config.js
             artifact_id: ${{ steps.upload-config.outputs.artifact-id }}
 
-            - name: Debug
-              run: |
-                echo "Version: ${{ steps.version-bot.outputs.version }}"
-                echo "Major: ${{ steps.version-bot.outputs.major }}"
+      - name: Debug
+        run: |
+          echo "Version: ${{ steps.version-bot.outputs.version }}"
+          echo "Major: ${{ steps.version-bot.outputs.major }}"
