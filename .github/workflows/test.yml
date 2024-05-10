@@ -31,3 +31,9 @@ jobs:
           remove-tags: true
           dry-run: true
           version-prefix: ''
+
+      - name: Version the release
+        if: success()
+        uses: bartonmalow/delete-old-release/.github/workflows/version.yml@main
+        with:
+            GH_PAT: ${{ secrets.GH_PAT }}

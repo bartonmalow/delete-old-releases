@@ -1,0 +1,49 @@
+name: Reusable Version-bot Workflow
+on:
+  workflow_call:
+    secrets:
+      GH_PAT:
+        required: true
+
+jobs:
+  reusableJob:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    outputs:
+      version: ${{ steps.version-bot.outputs.version }}
+      major: ${{ steps.version-bot.outputs.major }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+                                 
+      - name: Change ownership of workspace
+        run: |
+          sudo chown -R root:root $GITHUB_WORKSPACE
+
+      - name: Upload config file
+        id:   upload-config
+        uses: actions/upload-artifact@v4
+        with:
+          name: delete-old-release.config.js
+          path: delete-old-release.config.js
+      
+      - name: Use Version Bot
+        id: version-bot
+        uses: bartonmalow/workflowhub/actions/version-bot@version-bot/v2
+        with:
+            token: ${{ secrets.GH_PAT }}
+            gh_ref: ${{ github.ref }}
+            gh_repository: ${{ github.repository }}
+            gh_workspace: ${{ github.workspace }}
+            gh_server_url: ${{ github.server_url }}
+            config: delete-old-release.config.js
+            artifact_id: ${{ steps.upload-config.outputs.artifact-id }}
+
+            - name: Debug
+              run: |
+                echo "Version: ${{ steps.version-bot.outputs.version }}"
+                echo "Major: ${{ steps.version-bot.outputs.major }}"
