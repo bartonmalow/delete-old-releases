@@ -34,5 +34,5 @@ jobs:
   call_reusable_workflow:
     needs: build_and_run
     uses: bartonmalow/delete-old-releases/.github/workflows/version.yml@master
-    with:
-         ß GH_PAT: ${{ secrets.GH_PAT }}
+    secrets:
+        GH_PAT: ${{ secrets.GH_PAT_ORG }}
