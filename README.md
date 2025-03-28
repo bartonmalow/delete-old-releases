@@ -7,7 +7,7 @@ This action provides the following functionality for GitHub Actions users:
 - Optionally keeping the latest patch of each older minor versions.
 - Configuring how many releases to keep.
 
-# Usage
+## Usage
 
 See [action.yml](https://github.com/Nats-ji/delete-old-releases/blob/master/action.yml)
 
@@ -22,7 +22,8 @@ steps:
     keep-old-minor-releases-count: 1
 ```
 
-# Input
+## Input
+
 | Input | Required | Default | Description |
 | --- | --- | --- | --- |
 | token | Yes | | Your Github token. Can be abtained by using `${{ secrets.GITHUB_TOKEN }}` |
@@ -34,9 +35,12 @@ steps:
 | semver-loose | No | false | Interpret versions and ranges loosely. ([node-semver](https://docs.npmjs.com/cli/v6/using-npm/semver#functions))|
 | remove-tags | No | false | Also remove the tags associated with the removed releases. |
 | dry-run | No | false | Doesn't delete anything. Only a test run. |
+| version-prefix | No | '' | Only delete releases with this prefix. For example, if set to 'v', only releases starting with 'v' will be considered. |
 
 ## Example
+
 Say you have the following versions in your release:
+
 ```js
 [
     2.1.5, 2.1.4, 2.1.3, 2.1.2, 2.1.1, 2.1.0,
@@ -82,10 +86,40 @@ The following config will delete all but `2.1.5, 2.1.4, 2.0.3, 1.2.3`:
     keep-old-minor-releases-by: 'major'
 ```
 
-# License
+### Using version prefix
+
+Say you have the following versions in your release:
+
+```js
+[
+    v2.1.5, v2.1.4, v2.1.3, v2.1.2, v2.1.1, v2.1.0,
+    v2.0.3, v2.0.2, v2.0.1, v2.0.0,
+    v1.2.3, v1.2.2, v1.2.1, v1.2.0,
+    v1.1.3, v1.1.2, v1.1.1, v1.1.0,
+    v1.0.1, v1.0.0,
+    2.1.5, 2.1.4, 2.1.3, 2.1.2, 2.1.1, 2.1.0,
+    2.0.3, 2.0.2, 2.0.1, 2.0.0,
+    1.2.3, 1.2.2, 1.2.1, 1.2.0,
+    1.1.3, 1.1.2, 1.1.1, 1.1.0,
+    1.0.1, 1.0.0,
+]
+```
+
+The following config will only consider releases starting with 'v' and delete all but `v2.1.5, v2.1.4`:
+
+```yml
+- uses: Nats-ji/delete-old-releases@v1
+  with:
+    token: ${{ secrets.GITHUB_TOKEN }}
+    keep-count: 2
+    keep-old-minor-releases: false
+    version-prefix: 'v'
+```
+
+## License
 
 The scripts and documentation in this project are released under the [MIT License](https://github.com/Nats-ji/delete-old-releases/blob/master/LICENSE)
 
-# Contributions
+## Contributions
 
 Contributions are welcome!
